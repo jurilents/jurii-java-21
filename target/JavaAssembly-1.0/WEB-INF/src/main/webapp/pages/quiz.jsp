@@ -44,7 +44,11 @@
         <div class="select__wrapper select__temperature">
             <label for="temperature">Temperature regime: </label>
             <select id="temperature" name="temperature">
-                <% for (Temperature item : Temperature.values()) { %>
+                <% Temperature[] values1 = Temperature.values(); %>
+                <option value="<%= values1[0] %>">
+                    <%= values1[0] %>
+                </option>
+                <% for (Temperature item : values1) { %>
                 <option value="<%= item %>">
                     <%= item %>
                 </option>
@@ -55,7 +59,11 @@
         <div class="select__wrapper select__evolution">
             <label for="evolution-level">Evolution level: </label>
             <select id="evolution-level" name="evolution-level">
-                <% for (Level item : Level.values()) { %>
+                <% Level[] values2 = Level.values(); %>
+                <option value="<%= values2[0] %>">
+                    <%= values2[0] %>
+                </option>
+                <% for (Level item : values2) { %>
                 <option value="<%= item %>">
                     <%= item %>
                 </option>
@@ -66,7 +74,11 @@
         <div class="select__wrapper select__pollution">
             <label for="pollution-level">Pollution level: </label>
             <select id="pollution-level" name="pollution-level">
-                <% for (Level item : Level.values()) { %>
+                <% Level[] values3 = Level.values(); %>
+                <option value="<%= values3[0] %>">
+                    <%= values3[0] %>
+                </option>
+                <% for (Level item : values3) { %>
                 <option value="<%= item %>">
                     <%= item %>
                 </option>
@@ -77,7 +89,11 @@
         <div class="select__wrapper select__size margin-bottom">
             <label for="size">Territory size: </label>
             <select id="size" name="size">
-                <% for (Size item : Size.values()) { %>
+                <% Size[] values4 = Size.values(); %>
+                <option value="<%= values4[0] %>">
+                    <%= values4[0] %>
+                </option>
+                <% for (Size item : values4) { %>
                 <option value="<%= item %>">
                     <%= item %>
                 </option>
