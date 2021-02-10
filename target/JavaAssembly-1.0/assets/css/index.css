@@ -1,0 +1,41 @@
+header {
+    width: 100%;
+    color: white;
+    margin: 50px 0;
+    text-align: center;
+}
+
+h1 {
+    font-size: 110px;
+    color: #7f51ae;
+}
+
+h2 {
+    font-size: 44px;
+    margin: 40px 0 100px;
+}
+
+.button__wrapper {
+    width: 100%;
+}
+
+.button__wrapper > a {
+    display: block;
+    margin: 0 auto;
+    padding: 25px 0;
+    width: 40%;
+    font-size: 36px;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 4px 4px 1px 3.5px #a069de;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #573469;
+    transition: all 0.33s ease-in-out;
+}
+
+.button__wrapper > a:hover {
+    background-color: #a069de;
+    box-shadow: 4px 4px 1px 3.5px #573469;
+    transition: all 0.2s ease-in-out;
+}
