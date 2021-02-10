@@ -1,0 +1,5 @@
+# IDEA cahce dir
+.idea/
+
+# MAC OS cache file
+.DS_Store
