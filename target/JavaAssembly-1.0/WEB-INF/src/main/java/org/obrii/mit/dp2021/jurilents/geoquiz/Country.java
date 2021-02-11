@@ -79,6 +79,7 @@ public class Country {
 
 //endregion
 
+
 //region Private methods
 
     private <T extends Enum<T>> float compareLevels(T l1, T l2, float maxInfluence) {
@@ -86,7 +87,7 @@ public class Country {
 
         int delta = Math.abs(l1.ordinal() - l2.ordinal());
         // if value are neighbored
-        if (delta == 1) return maxInfluence / 4f;
+        if (delta == 1) return maxInfluence / 2f;
         else return 0;
     }
 
@@ -105,38 +106,6 @@ public class Country {
 
     public String getImagePath() {
         return _imagePath;
-    }
-
-    public String geFlagPath() {
-        return _flagPath;
-    }
-
-    public boolean hasSeaLine() {
-        return _hasSeaLine;
-    }
-
-    public boolean isInMountains() {
-        return _isInMountains;
-    }
-
-    public boolean isInForest() {
-        return _isInForest;
-    }
-
-    public Temperature getTemperature() {
-        return _temperature;
-    }
-
-    public Level getEvolutionLevel() {
-        return _evolutionLevel;
-    }
-
-    public Level getPollutionLevel() {
-        return _pollutionLevel;
-    }
-
-    public Size getSize() {
-        return _size;
     }
 
     public String getFlagPath() {
@@ -178,57 +147,57 @@ public class Country {
 
         //region Accessors
 
-        public Builder setName(String name) {
+        public Builder name(String name) {
             this._name = name;
             return this;
         }
 
-        public Builder setDescription(String description) {
+        public Builder description(String description) {
             this._description = description;
             return this;
         }
 
-        public Builder setImagePath(String imagePath) {
+        public Builder imagePath(String imagePath) {
             this._imagePath = imagePath;
             return this;
         }
 
-        public Builder setFlagPath(String flagPath) {
+        public Builder flagPath(String flagPath) {
             this._flagPath = flagPath;
             return this;
         }
 
-        public Builder setHasSeaLine(boolean hasSeaLine) {
+        public Builder hasSeaLine(boolean hasSeaLine) {
             this._hasSeaLine = hasSeaLine;
             return this;
         }
 
-        public Builder setIsInMountains(boolean isInMountains) {
+        public Builder isInMountains(boolean isInMountains) {
             this._isInMountains = isInMountains;
             return this;
         }
 
-        public Builder setIsInForest(boolean isInForest) {
+        public Builder isInForest(boolean isInForest) {
             this._isInForest = isInForest;
             return this;
         }
 
-        public Builder setTemperature(Temperature temperature) {
+        public Builder temperature(Temperature temperature) {
             this._temperature = temperature;
             return this;
         }
 
-        public Builder setEvolutionLevel(Level evolutionLevel) {
+        public Builder evolutionLevel(Level evolutionLevel) {
             this._evolutionLevel = evolutionLevel;
             return this;
         }
 
-        public Builder setPollutionLevel(Level pollutionLevel) {
+        public Builder pollutionLevel(Level pollutionLevel) {
             this._pollutionLevel = pollutionLevel;
             return this;
         }
 
-        public Builder setSize(Size size) {
+        public Builder size(Size size) {
             this._size = size;
             return this;
         }

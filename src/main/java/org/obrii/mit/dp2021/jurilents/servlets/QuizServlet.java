@@ -16,6 +16,8 @@ public class QuizServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("GET: /quiz");
+//        QuizProvider.comparingValuesTest();
+
         request.getRequestDispatcher("pages/quiz.jsp").forward(request, response);
     }
 
@@ -24,13 +26,13 @@ public class QuizServlet extends HttpServlet {
         System.out.println("POST: /quiz");
 
         Country usersCountryData = Country.builder()
-                .setHasSeaLine(isChecked(request.getParameter("has-sealine")))
-                .setIsInMountains(isChecked(request.getParameter("has-mountains")))
-                .setIsInForest(isChecked(request.getParameter("has-forest")))
-                .setTemperature(Temperature.valueOf(request.getParameter("temperature")))
-                .setEvolutionLevel(Level.valueOf(request.getParameter("evolution-level")))
-                .setPollutionLevel(Level.valueOf(request.getParameter("pollution-level")))
-                .setSize(Size.valueOf(request.getParameter("size")))
+                .hasSeaLine(isChecked(request.getParameter("has-sealine")))
+                .isInMountains(isChecked(request.getParameter("has-mountains")))
+                .isInForest(isChecked(request.getParameter("has-forest")))
+                .temperature(Temperature.valueOf(request.getParameter("temperature")))
+                .evolutionLevel(Level.valueOf(request.getParameter("evolution-level")))
+                .pollutionLevel(Level.valueOf(request.getParameter("pollution-level")))
+                .size(Size.valueOf(request.getParameter("size")))
                 .build();
 
         Country resultCountry = QuizProvider.findMostSimilar(usersCountryData);
