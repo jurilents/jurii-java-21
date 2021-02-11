@@ -15,7 +15,7 @@
 
     <div class="country__wrapper">
         <div class="top-section">
-            <h3><em>your favourite country could to be...</em></h3>
+            <h3><em>your favourite country could to be...</em> [equality <%= data.getEquality() %>%]</h3>
             <a class="home-button" href="${pageContext.request.contextPath}/index.jsp">Return to home</a>
         </div>
 

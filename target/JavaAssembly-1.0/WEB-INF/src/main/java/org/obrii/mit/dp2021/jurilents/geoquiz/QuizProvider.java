@@ -330,6 +330,7 @@ public class QuizProvider {
         }
 
         // return the nearest country to source from prototypes
+        prototypes[indexOfMax].setEquality((int) (results[indexOfMax] * 100));
         return prototypes[indexOfMax];
     }
 

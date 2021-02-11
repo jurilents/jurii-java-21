@@ -17,7 +17,7 @@ public class QuizServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("GET: /quiz");
 //        QuizProvider.comparingValuesTest();
-        
+
         request.getRequestDispatcher("pages/quiz.jsp").forward(request, response);
     }
 

@@ -20,6 +20,8 @@ public class Country {
     private Level _pollutionLevel;
     private Size _size;
 
+    private int _equality;
+
 //endregion
 
 
@@ -108,9 +110,11 @@ public class Country {
         return _imagePath;
     }
 
-    public String getFlagPath() {
-        return _flagPath;
-    }
+    public String getFlagPath() { return _flagPath; }
+
+    public int getEquality() { return _equality; }
+
+    public void setEquality(int equality) { this._equality = equality; }
 
 
 //endregion
