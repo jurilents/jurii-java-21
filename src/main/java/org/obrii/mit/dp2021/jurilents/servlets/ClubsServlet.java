@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-@WebServlet(name = "Lab2Servlet", urlPatterns = {"/Lab2/clubs"})
+@WebServlet(name = "ClubsServlet", urlPatterns = {"/Lab2/clubs"})
 public class ClubsServlet extends HttpServlet {
 
     private SchoolProcessor school = new SchoolProcessor();

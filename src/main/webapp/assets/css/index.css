@@ -39,3 +39,8 @@ h2 {
     box-shadow: 4px 4px 1px 3.5px #573469;
     transition: all 0.2s ease-in-out;
 }
+
+img {
+    display: block;
+    margin: 100px auto;
+}
