@@ -11,7 +11,6 @@
 </head>
 <body>
 
-
 <main>
     <form action="${pageContext.request.contextPath}/quiz" method="post">
 
