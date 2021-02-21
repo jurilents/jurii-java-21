@@ -18,7 +18,7 @@
         <a href="${pageContext.request.contextPath}/Lab2/clubs">Start journey!</a>
     </div>
 
-    <img src="${pageContext.request.contextPath}/assets/IMAGE 2021-02-20 12:10:09.jpg" alt="">
+    <img src="${pageContext.request.contextPath}/assets/IMAGE 2021-02-20 12:10:09.png" alt="">
 </main>
 
 </body>
