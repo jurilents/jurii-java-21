@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<form action="${pageContext.request.contextPath}/Lab3/form" method="POST">
+<form action="${pageContext.request.contextPath}/form" method="POST">
 
     <label>
         <span>ID</span>

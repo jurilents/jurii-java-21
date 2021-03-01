@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "FormServlet", urlPatterns = {"/Lab3/form"})
+@WebServlet(name = "FormServlet", urlPatterns = {"/form"})
 public class FormServlet extends HttpServlet {
 
     // ================================

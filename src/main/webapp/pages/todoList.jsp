@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<% String FORM_URL = request.getRequestURL().toString() + "/Lab3/form"; %>
+<% String FORM_URL = request.getRequestURL().toString() + "/form"; %>
 
 <main>
     <h1>It's open ToDo List!</h1>
