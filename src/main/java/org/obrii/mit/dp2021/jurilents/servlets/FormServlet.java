@@ -1,9 +1,10 @@
 package org.obrii.mit.dp2021.jurilents.servlets;
 
+import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
+import org.obrii.mit.dp2021.jurilents.laba3.data.ToDoTask;
 import org.obrii.mit.dp2021.jurilents.laba3.db.Database;
 import org.obrii.mit.dp2021.jurilents.laba3.db.TodosDatabase;
 
-import javax.json.stream.JsonParser;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,8 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet(name = "FormServlet", urlPatterns = {"/form"})
 public class FormServlet extends HttpServlet {
@@ -22,7 +22,38 @@ public class FormServlet extends HttpServlet {
     // ====================================
 
     private void sendForm(HttpServletRequest request, HttpServletResponse response, Database dbProvider) throws ServletException, IOException {
-        request.setAttribute("todoData", dbProvider.readAllData());
+        String addCountString = request.getParameter("add");
+        if (addCountString != null) {
+            int count = Integer.parseInt(addCountString);
+            dbProvider.generateData(count);
+        }
+
+        IData[] data = dbProvider.readAllData();
+        String sortingKey = request.getParameter("sort");
+        boolean reversed = request.getParameter("reversed") != null;
+
+        if (sortingKey != null && data.length > 0 && data[0] instanceof ToDoTask) {
+            switch (sortingKey) {
+                case "id":
+                    data = reversed
+                            ? Arrays.stream(data).sorted((a, b) -> -(a.getId() - b.getId())).toArray(IData[]::new)
+                            : Arrays.stream(data).sorted(Comparator.comparingInt(IData::getId)).toArray(IData[]::new);
+                    break;
+                case "task":
+                    data = reversed
+                            ? Arrays.stream(data).sorted((a, b) -> -((ToDoTask) a).getName().compareTo(((ToDoTask) b).getName())).toArray(IData[]::new)
+                            : Arrays.stream(data).sorted(Comparator.comparing(a -> ((ToDoTask) a).getName())).toArray(IData[]::new);
+                    break;
+                case "status":
+                    data = reversed
+                            ? Arrays.stream(data).sorted((a, b) -> ((ToDoTask) a).isCompleted() == ((ToDoTask) b).isCompleted() ? 0 : 1).toArray(IData[]::new)
+                            : Arrays.stream(data).sorted((a, b) -> ((ToDoTask) a).isCompleted() == ((ToDoTask) b).isCompleted() ? 1 : 0).toArray(IData[]::new);
+                    break;
+            }
+        }
+        System.out.println("len: " + data.length);
+        request.setAttribute("todoData", data);
+
         request.getRequestDispatcher("pages/todoList.jsp").forward(request, response);
     }
 

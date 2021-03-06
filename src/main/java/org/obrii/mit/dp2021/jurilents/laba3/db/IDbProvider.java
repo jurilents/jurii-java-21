@@ -8,7 +8,7 @@ public interface IDbProvider<TData> {
 
     List<TData> read();
 
-    void update(TData data);
+    void update(int oldId, TData data);
 
     void delete(int id);
 

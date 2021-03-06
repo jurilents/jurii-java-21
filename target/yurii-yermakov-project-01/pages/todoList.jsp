@@ -13,13 +13,22 @@
 <main>
     <h1>It's open ToDo List!</h1>
     <p>Everyone can update it, but not everyone can understand how to use it...</p>
+    <p>Let't try to click on the headers!</p>
 
     <table id="todolist-form">
         <thead>
         <tr>
-            <th>#</th>
-            <th>Task Description</th>
-            <th>Status</th>
+            <th>
+                #
+                <a href="<%= FORM_URL %>?sort=id">🔼</a>
+                <a href="<%= FORM_URL %>?sort=id&reversed=1">🔽</a>
+            </th>
+            <th><a href="<%= FORM_URL %>?sort=task">Task Description</a></th>
+            <th>
+                <%--<a href="<%= FORM_URL %>?sort=status">--%>
+                Completed
+                <%--</a>--%>
+            </th>
         </tr>
         </thead>
 
@@ -52,6 +61,19 @@
         <a class="add-button" href="<%= FORM_URL %>?opt=create">Add New</a>
     </div>
 
+    <br>
+    <hr>
+    <br>
+
+    <form action="<%= FORM_URL %>" method="POST">
+        <h3>Add new random items</h3>
+        <label>
+            <span>Count: </span>
+            <input type="number" name="add">
+        </label>
+        <button type="submit">Add</button>
+    </form>
+
 </main>
 
 <style>
@@ -76,39 +98,6 @@
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(() => {
-        function sortTable(table, col, reverse) {
-            var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
-                tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
-                i;
-            reverse = -((+reverse) || -1);
-            console.log('sorted: ' + col + ', ' + reverse)
-
-            tr = tr.sort(function (a, b) { // sort rows
-                return reverse // `-1 *` if want opposite order
-                    * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
-                            .localeCompare(b.cells[col].textContent.trim())
-                    );
-            });
-
-            console.log('len: ' + tr.length)
-            for (i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
-        }
-
-        function makeSortable(table) {
-            console.log('started')
-            var th = table.tHead, i;
-            th && (th = th.rows[0]) && (th = th.cells);
-            if (th) i = th.length;
-            else return; // if no `<thead>` then do nothing
-            console.log('thead step')
-            while (--i >= 0) (function (i) {
-                var dir = 1;
-                th[i].addEventListener('click', function () {
-                    console.log('sorting: ' + i + ', ' + dir)
-                    sortTable(table, i, (dir = 1 - dir))
-                });
-            }(i));
-        }
 
         const banner = {
             init: () => {
@@ -126,8 +115,6 @@
 
         const todosTable = document.getElementById('todolist-form');
         const todos = todosTable.querySelectorAll('.todo-item');
-
-        makeSortable(todosTable);
 
         for (let item of todos) {
             const id = +item.querySelector('.id-input').value;

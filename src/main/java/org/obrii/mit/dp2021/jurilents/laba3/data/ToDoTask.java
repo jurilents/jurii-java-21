@@ -7,6 +7,8 @@ public class ToDoTask implements Serializable, IData {
     private String name;
     private boolean isCompleted;
 
+    public ToDoTask() {}
+
     public ToDoTask(int id, String name) {
         this(id, name, false);
     }

@@ -68,10 +68,10 @@ public class FileDbProvider<TData extends IData> implements IDbProvider<TData> {
     }
 
     @Override
-    public void update(TData newData) {
+    public void update(int oldId, TData newData) {
         List<TData> data = this.read();
         data.stream() // remove if it already exist
-                .filter(d -> d.getId() == newData.getId())
+                .filter(d -> d.getId() == oldId)
                 .findFirst().ifPresent(data::remove);
 
         logger.log(Level.INFO, "Data updated");

@@ -19,21 +19,24 @@ public abstract class Database {
 
     public abstract void createData(HttpServletRequest req);
     public abstract IData[] readAllData();
-    public abstract void updateData(HttpServletRequest req);
+    public abstract void updateData(HttpServletRequest req) throws IOException;
     public abstract void deleteData(HttpServletRequest req) throws IOException;
+    public abstract void generateData(int count);
 
     public static TodosDatabase getDatabase() {
         IDbProvider<IData> provider = new FileDbProvider<>(file);
         return new TodosDatabase(provider);
     }
 
-    protected static Map<String, String> getBody(HttpServletRequest request) throws IOException {
+    protected static Map<String, String> getBody(HttpServletRequest request) {
         try {
             Map<String, String> data = new HashMap<>();
             BufferedReader reader = request.getReader();
             reader.lines().forEach((String line) -> {
-                String[] pair = line.split("=");
-                data.put(pair[0], pair[1]);
+                for (String item : line.split("&")) {
+                    String[] pair = item.split("=");
+                    data.put(pair[0], pair[1].replace('+', ' '));
+                }
             });
             return data;
         } catch (IOException ex) {
