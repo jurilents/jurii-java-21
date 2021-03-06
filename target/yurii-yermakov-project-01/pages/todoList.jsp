@@ -13,21 +13,72 @@
 <main>
     <h1>It's open ToDo List!</h1>
     <p>Everyone can update it, but not everyone can understand how to use it...</p>
-    <p>Let't try to click on the headers!</p>
+    <p>Let's try to click on the headers!</p>
+
+    <br>
+    <hr>
+    <br>
+
+    <form action="<%= FORM_URL %>" method="GET">
+        <h3>Filter</h3>
+
+        <label>
+            <span>by id</span>
+            <input type="checkbox" name="byId">
+        </label>
+
+        <label>
+            <span>by description</span>
+            <input type="checkbox" name="byTask">
+        </label>
+
+        <br>
+        <label>
+            <span>All</span>
+            <input type="radio" name="completed" value="all" checked="checked">
+        </label>
+
+        <label>
+            <span>Only completed</span>
+            <input type="radio" name="completed" value="yes">
+        </label>
+
+        <label>
+            <span>Only NOT completed</span>
+            <input type="radio" name="completed" value="no">
+        </label>
+
+        <br>
+
+        <input type="text" name="text">
+
+        <button type="submit">Apply</button>
+
+        <h5>
+            <a href="<%= FORM_URL %>">Reset</a>
+        </h5>
+    </form>
+
+    <br>
+    <hr>
+    <br>
 
     <table id="todolist-form">
         <thead>
         <tr>
             <th>
-                #
                 <a href="<%= FORM_URL %>?sort=id">🔼</a>
+                #
                 <a href="<%= FORM_URL %>?sort=id&reversed=1">🔽</a>
             </th>
-            <th><a href="<%= FORM_URL %>?sort=task">Task Description</a></th>
             <th>
-                <%--<a href="<%= FORM_URL %>?sort=status">--%>
+                <a href="<%= FORM_URL %>?sort=task">🔼</a>
+                Task Description
+                <a href="<%= FORM_URL %>?sort=task&reversed=1">🔽</a>
+            </th>
+            <th>
+                <%--sort=status--%>
                 Completed
-                <%--</a>--%>
             </th>
         </tr>
         </thead>

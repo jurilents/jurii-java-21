@@ -18,7 +18,7 @@ public abstract class Database {
     }
 
     public abstract void createData(HttpServletRequest req);
-    public abstract IData[] readAllData();
+    public abstract IData[] readData(HttpServletRequest req);
     public abstract void updateData(HttpServletRequest req) throws IOException;
     public abstract void deleteData(HttpServletRequest req) throws IOException;
     public abstract void generateData(int count);

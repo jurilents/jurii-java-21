@@ -28,7 +28,7 @@ public class FormServlet extends HttpServlet {
             dbProvider.generateData(count);
         }
 
-        IData[] data = dbProvider.readAllData();
+        IData[] data = dbProvider.readData(request);
         String sortingKey = request.getParameter("sort");
         boolean reversed = request.getParameter("reversed") != null;
 
@@ -128,5 +128,4 @@ public class FormServlet extends HttpServlet {
     public String getServletInfo() {
         return "<Lab3FormServlet>";
     }
-
 }
