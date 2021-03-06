@@ -1,5 +1,6 @@
 # IDEA cahce dir
 .idea/
 
-# MAC OS cache file
+# MAC OS cache
 .DS_Store
+*.icloud

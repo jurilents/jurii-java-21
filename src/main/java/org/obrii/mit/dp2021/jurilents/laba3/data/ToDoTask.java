@@ -1,6 +1,8 @@
 package org.obrii.mit.dp2021.jurilents.laba3.data;
 
-public class ToDoTask implements IData {
+import java.io.Serializable;
+
+public class ToDoTask implements Serializable, IData {
     private int id;
     private String name;
     private boolean isCompleted;

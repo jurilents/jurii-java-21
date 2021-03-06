@@ -4,6 +4,7 @@ import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
 import org.obrii.mit.dp2021.jurilents.laba3.data.ToDoTask;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 public class TodosDatabase extends Database {
 
@@ -38,8 +39,8 @@ public class TodosDatabase extends Database {
     }
 
     @Override
-    public void deleteData(HttpServletRequest req) {
-        int id = Integer.parseInt(req.getParameter("id"));
+    public void deleteData(HttpServletRequest req) throws IOException {
+        int id = Integer.parseInt(getBody(req).get("id"));
         db.delete(id);
     }
 }

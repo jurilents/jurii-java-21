@@ -65,6 +65,7 @@
 
 <div id="banner">
     <h2 class="banner-header"></h2>
+    <button type="button" class="banner-button button-ok">OK</button>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -75,11 +76,19 @@
             init: () => {
                 this.wrapper = $('#banner');
                 this.title = this.wrapper.find('.banner-header');
+
+                this.okButton = this.wrapper.find('.button-hide');
+                this.okButton.on('click', () => {
+                    this.wrapper.removeClass('banner-visible');
+                });
             },
             show: (time, text) => {
                 this.title.text(text);
                 this.wrapper.addClass('banner-visible');
-                setTimeout(() => this.wrapper.removeClass('banner-visible'), time);
+                setTimeout(() => {
+                    this.wrapper.removeClass('banner-visible');
+                    console.log("end");
+                }, time);
             }
         }
 
