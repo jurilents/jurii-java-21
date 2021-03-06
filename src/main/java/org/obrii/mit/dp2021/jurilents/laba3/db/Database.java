@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Database {
-    protected static File file = new File(Config.DATABASE_PATH);
+    protected static File file = new File(Config.getFileName());
 
     protected IDbProvider<IData> db;
 

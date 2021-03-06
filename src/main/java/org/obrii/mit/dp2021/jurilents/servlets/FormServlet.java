@@ -1,6 +1,6 @@
 package org.obrii.mit.dp2021.jurilents.servlets;
 
-import org.obrii.mit.dp2021.jurilents.laba3.CollectionUtils;
+import org.obrii.mit.dp2021.jurilents.Config;
 import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
 import org.obrii.mit.dp2021.jurilents.laba3.data.ToDoTask;
 import org.obrii.mit.dp2021.jurilents.laba3.db.Database;
@@ -54,7 +54,6 @@ public class FormServlet extends HttpServlet {
                     throw new IllegalStateException("Unexpected value: " + sortingKey);
             }
         }
-        System.out.println("len: " + data.length);
         request.setAttribute("todoData", data);
 
         request.getRequestDispatcher("pages/todoList.jsp").forward(request, response);
@@ -94,8 +93,12 @@ public class FormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String option = request.getParameter("opt");
-
         System.out.println("form/GET" + (option == null ? "" : " " + option));
+
+        if (Config.getFileName() == null || Config.getFileName().equals("")) {
+            Config.setFileName(this.getServletContext().getRealPath(""));
+            System.out.println("DATA PATH: " + Config.getFileName());
+        }
 
         if (option != null && option.equals("create")) {
             request.getRequestDispatcher("pages/todoAdd.jsp").forward(request, response);
