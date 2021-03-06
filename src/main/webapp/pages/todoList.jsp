@@ -18,7 +18,7 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>Task</th>
+            <th>Task Description</th>
             <th>Status</th>
         </tr>
         </thead>
@@ -58,8 +58,13 @@
     #banner {
         display: none;
     }
+
     .banner-visible {
         display: block !important;
+    }
+
+    th {
+        cursor: pointer;
     }
 </style>
 
@@ -71,6 +76,79 @@
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(() => {
+        // Table sort for both columns and both directions.
+        function sortTable(table, n) {
+            var rows, i, x, y, count = 0;
+            var switching = true;
+
+            // Order is set as ascending
+            var direction = "ascending";
+
+            // Run loop until no switching is needed
+            while (switching) {
+                switching = false;
+                var rows = table.rows;
+
+                //Loop to go through all rows
+                for (i = 1; i < (rows.length - 1); i++) {
+                    var Switch = false;
+
+                    // Fetch 2 elements that need to be compared
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                    // Check the direction of order
+                    if (direction == "asc") {
+
+                        // Check if 2 rows need to be switched
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            // If yes, mark Switch as needed and break loop
+                            Switch = true;
+                            break;
+                        }
+                    } else if (direction == "desc") {
+
+                        // Check direction
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            // If yes, mark Switch as needed and break loop
+                            Switch = true;
+                            break;
+                        }
+                    }
+                }
+                if (Switch) {
+                    // Function to switch rows and mark switch as completed
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+
+                    // Increase count for each switch
+                    count++;
+                } else {
+                    // Run while loop again for descending order
+                    if (count == 0 && direction == "asc") {
+                        direction = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function makeSortable(table) {
+            console.log('started')
+            var th = table.tHead, i;
+            th && (th = th.rows[0]) && (th = th.cells);
+            if (th) i = th.length;
+            else return; // if no `<thead>` then do nothing
+            console.log('thead step')
+            while (--i >= 0) (function (i) {
+                var dir = 1;
+                th[i].addEventListener('click', function () {
+                    console.log('sorting: ' + i + ', ' + dir)
+                    sortTable(table, i, (dir = 1 - dir))
+                });
+            }(i));
+        }
+
         const banner = {
             init: () => {
                 this.wrapper = $('#banner');
@@ -88,19 +166,19 @@
         const todosTable = document.getElementById('todolist-form');
         const todos = todosTable.querySelectorAll('.todo-item');
 
+        makeSortable(todosTable);
+
         for (let item of todos) {
             const id = +item.querySelector('.id-input').value;
-            const name = item.querySelector('.name-input').value;
-            const completed = item.querySelector('.item-completed').value === 'on';
-
-            const data = {
-                id: id,
-                name: name,
-                completed: completed
-            }
 
             const updateButton = item.querySelector('.update-button');
             updateButton.addEventListener('click', () => {
+                const data = {
+                    id: +item.querySelector('.id-input').value,
+                    oldId: id,
+                    name: item.querySelector('.name-input').value,
+                    completed: item.querySelector('.item-completed').value === 'on'
+                }
                 console.log(data);
                 $.ajax({
                     url: "<%= FORM_URL %>",
@@ -119,7 +197,6 @@
 
             const deleteButton = item.querySelector('.delete-button');
             deleteButton.addEventListener('click', () => {
-                console.log(data);
                 $.ajax({
                     url: "<%= FORM_URL %>",
                     type: 'DELETE',
