@@ -72,7 +72,7 @@ public class FileDbProvider<TData extends IData> implements IDbProvider<TData> {
         List<TData> data = this.read();
         data.stream() // remove if it already exist
                 .filter(d -> d.getId() == oldId)
-                .findFirst().ifPresent(data::remove);
+                .findFirst().ifPresent(o -> data.remove(o));
 
         logger.log(Level.INFO, "Data updated");
         data.add(newData); // add new instance
@@ -86,7 +86,7 @@ public class FileDbProvider<TData extends IData> implements IDbProvider<TData> {
         System.out.println("data : " + data.size());
         data.stream() // remove if it already exist
                 .filter(d -> d.getId() == id)
-                .findFirst().ifPresent(data::remove);
+                .findFirst().ifPresent(o -> data.remove(o));
         System.out.println("okk");
 
         logger.log(Level.INFO, "Data deleted");

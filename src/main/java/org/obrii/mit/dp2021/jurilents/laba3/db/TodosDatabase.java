@@ -5,8 +5,8 @@ import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
 import org.obrii.mit.dp2021.jurilents.laba3.data.ToDoTask;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.*;
+import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
 public class TodosDatabase extends Database {
@@ -27,37 +27,36 @@ public class TodosDatabase extends Database {
 
     @Override
     public IData[] readData(HttpServletRequest req) {
-        ToDoTask[] data = db.read().toArray(ToDoTask[]::new);
+        ToDoTask[] data = db.read().toArray(new ToDoTask[0]);
         String matchingText = req.getParameter("text");
 
         // apply filters
         Stream<ToDoTask> stream = Arrays.stream(data);
 
-        String byId = req.getParameter("byId");
-        if (byId != null && (byId.equals("on") || byId.equals("checked"))) {
-            stream = stream.filter(a -> String.format("%d", a.getId()).contains(matchingText));
-            System.out.println("by id");
-        }
-
-        String byTask = req.getParameter("byTask");
-        if (byTask != null && (byTask.equals("on") || byTask.equals("checked"))) {
-            stream = stream.filter(a -> a.getName().contains(matchingText));
-            System.out.println("by task desc");
+        String by = req.getParameter("by");
+        if (by != null) {
+            if (by.equals("id")) {
+                stream = stream.filter(a -> String.format("%d", a.getId()).contains(matchingText));
+                System.out.println("by id");
+            } else if (by.equals("task")) {
+                stream = stream.filter(a -> a.getName().contains(matchingText));
+                System.out.println("by task desc");
+            }
         }
 
         String completedText = req.getParameter("completed");
         if (completedText != null && !completedText.equals("all")) {
             stream = completedText.equals("yes")
-                    ? stream.filter(ToDoTask::isCompleted)
+                    ? stream.filter(toDoTask -> toDoTask.isCompleted())
                     : stream.filter(a -> !a.isCompleted());
             System.out.println("by completed");
         }
 
-        return stream.toArray(IData[]::new);
+        return stream.toArray(size -> new IData[size]);
     }
 
     @Override
-    public void updateData(HttpServletRequest req) throws IOException {
+    public void updateData(HttpServletRequest req) {
         Map<String, String> data = getBody(req);
         IData todo = new ToDoTask(
                 Integer.parseInt(data.get("id")),
@@ -69,7 +68,7 @@ public class TodosDatabase extends Database {
     }
 
     @Override
-    public void deleteData(HttpServletRequest req) throws IOException {
+    public void deleteData(HttpServletRequest req) {
         int id = Integer.parseInt(getBody(req).get("id"));
         db.delete(id);
     }

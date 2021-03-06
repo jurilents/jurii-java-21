@@ -24,12 +24,11 @@
 
         <label>
             <span>by id</span>
-            <input type="checkbox" name="byId">
+            <input type="radio" name="by" value="id">
         </label>
-
         <label>
             <span>by description</span>
-            <input type="checkbox" name="byTask">
+            <input type="radio" name="by" value="task">
         </label>
 
         <br>

@@ -1,5 +1,6 @@
 package org.obrii.mit.dp2021.jurilents.servlets;
 
+import org.obrii.mit.dp2021.jurilents.laba3.CollectionUtils;
 import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
 import org.obrii.mit.dp2021.jurilents.laba3.data.ToDoTask;
 import org.obrii.mit.dp2021.jurilents.laba3.db.Database;
@@ -36,19 +37,21 @@ public class FormServlet extends HttpServlet {
             switch (sortingKey) {
                 case "id":
                     data = reversed
-                            ? Arrays.stream(data).sorted((a, b) -> -(a.getId() - b.getId())).toArray(IData[]::new)
-                            : Arrays.stream(data).sorted(Comparator.comparingInt(IData::getId)).toArray(IData[]::new);
+                            ? Arrays.stream(data).sorted((a, b) -> -(a.getId() - b.getId())).toArray(size -> new IData[size])
+                            : Arrays.stream(data).sorted(Comparator.comparingInt(iData -> iData.getId())).toArray(size -> new IData[size]);
                     break;
                 case "task":
                     data = reversed
-                            ? Arrays.stream(data).sorted((a, b) -> -((ToDoTask) a).getName().compareTo(((ToDoTask) b).getName())).toArray(IData[]::new)
-                            : Arrays.stream(data).sorted(Comparator.comparing(a -> ((ToDoTask) a).getName())).toArray(IData[]::new);
+                            ? Arrays.stream(data).sorted((a, b) -> -((ToDoTask) a).getName().compareTo(((ToDoTask) b).getName())).toArray(size -> new IData[size])
+                            : Arrays.stream(data).sorted(Comparator.comparing(a -> ((ToDoTask) a).getName())).toArray(size -> new IData[size]);
                     break;
                 case "status":
                     data = reversed
-                            ? Arrays.stream(data).sorted((a, b) -> ((ToDoTask) a).isCompleted() == ((ToDoTask) b).isCompleted() ? 0 : 1).toArray(IData[]::new)
-                            : Arrays.stream(data).sorted((a, b) -> ((ToDoTask) a).isCompleted() == ((ToDoTask) b).isCompleted() ? 1 : 0).toArray(IData[]::new);
+                            ? Arrays.stream(data).sorted((a, b) -> ((ToDoTask) a).isCompleted() == ((ToDoTask) b).isCompleted() ? 0 : 1).toArray(size -> new IData[size])
+                            : Arrays.stream(data).sorted((a, b) -> ((ToDoTask) a).isCompleted() == ((ToDoTask) b).isCompleted() ? 1 : 0).toArray(size -> new IData[size]);
                     break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + sortingKey);
             }
         }
         System.out.println("len: " + data.length);
