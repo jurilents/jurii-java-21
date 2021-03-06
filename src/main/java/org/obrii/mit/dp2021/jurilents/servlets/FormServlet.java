@@ -80,6 +80,9 @@ public class FormServlet extends HttpServlet {
 
         if (request.getParameter("opt") != null) {
             request.getRequestDispatcher("pages/todoAdd.jsp").forward(request, response);
+        } else if (request.getParameter("add") != null) {
+            TodosDatabase db = Database.getDatabase();
+            sendForm(request, response, db);
         } else {
             TodosDatabase db = Database.getDatabase();
             db.createData(request);
