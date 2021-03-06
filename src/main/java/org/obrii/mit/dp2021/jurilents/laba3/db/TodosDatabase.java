@@ -43,7 +43,6 @@ public class TodosDatabase extends Database {
                 System.out.println("by task desc");
             }
         }
-
         String completedText = req.getParameter("completed");
         if (completedText != null && !completedText.equals("all")) {
             stream = completedText.equals("yes")
