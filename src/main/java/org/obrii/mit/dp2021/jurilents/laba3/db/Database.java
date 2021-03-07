@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Database {
-    protected static File file = new File(Config.getFileName());
-
     protected IDbProvider<IData> db;
 
     protected Database(IDbProvider<IData> dbProvider) {
@@ -23,7 +21,9 @@ public abstract class Database {
     public abstract void deleteData(HttpServletRequest req) throws IOException;
     public abstract void generateData(int count);
 
-    public static TodosDatabase getDatabase() {
+    public static TodosDatabase getDatabase() throws IOException {
+        File file = new File(Config.getFileName());
+        if (!file.exists()) file.createNewFile();
         IDbProvider<IData> provider = new FileDbProvider<>(file);
         return new TodosDatabase(provider);
     }
