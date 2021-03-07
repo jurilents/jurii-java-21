@@ -26,7 +26,8 @@ public class FormServlet extends HttpServlet {
         String addCountString = request.getParameter("add");
         if (addCountString != null) {
             int count = Integer.parseInt(addCountString);
-            dbProvider.generateData(count);
+            if (count > 0 && count <= 50)
+                dbProvider.generateData(count);
         }
 
         IData[] data = dbProvider.readData(request);
