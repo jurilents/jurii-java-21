@@ -16,7 +16,7 @@ public class ToDoTask implements Serializable, IData {
     @DbField(name = "name", opts = "text not null")
     private String name;
 
-    @DbField(name = "completed", opts = "boolean not null default 0")
+    @DbField(name = "completed", opts = "boolean not null default false")
     private boolean isCompleted;
 
 
@@ -33,7 +33,7 @@ public class ToDoTask implements Serializable, IData {
     }
 
 
-    public static ToDoTask parse(ResultSet rs) throws SQLException {
+    public ToDoTask parse(ResultSet rs) throws SQLException {
         return new ToDoTask(
                 rs.getInt("id"),
                 rs.getString("name"),
@@ -46,12 +46,21 @@ public class ToDoTask implements Serializable, IData {
 
     @Override
     public String getValues() {
-        return String.format("%d, %s, %d", id, name, isCompleted ? 1 : 0);
+        return String.format("%d, '%s', %s", id, name, isCompleted ? "true" : "false");
     }
 
     @Override
     public String getKeysAndValues() {
-        return String.format("id = %d, name = %s, completed = %d", id, name, isCompleted ? 1 : 0);
+        return String.format("id = %d, name = '%s', completed = %s", id, name, isCompleted ? "true" : "false");
+    }
+
+    @Override
+    public String toString() {
+        return "ToDoTask{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isCompleted=" + isCompleted +
+                '}';
     }
 
     public void setId(int id) { this.id = id; }

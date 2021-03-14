@@ -118,7 +118,7 @@
     <form action="<%= FORM_URL %>" method="POST">
         <h3>Add new random items</h3>
         <label>
-            <span>Count (1-49): </span>
+            <span>Count (1-50): </span>
             <input type="number" name="add">
         </label>
         <button type="submit">Add</button>

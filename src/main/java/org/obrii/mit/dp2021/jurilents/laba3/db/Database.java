@@ -2,6 +2,7 @@ package org.obrii.mit.dp2021.jurilents.laba3.db;
 
 import org.obrii.mit.dp2021.jurilents.Config;
 import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
+import org.obrii.mit.dp2021.jurilents.laba3.data.ToDoTask;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -17,11 +18,11 @@ public abstract class Database {
         this.db = dbProvider;
     }
 
-    public abstract void createData(HttpServletRequest req);
-    public abstract IData[] readData(HttpServletRequest req);
-    public abstract void updateData(HttpServletRequest req) throws IOException;
-    public abstract void deleteData(HttpServletRequest req) throws IOException;
-    public abstract void generateData(int count);
+    public abstract void createData(HttpServletRequest req) throws SQLException;
+    public abstract IData[] readData(HttpServletRequest req) throws SQLException;
+    public abstract void updateData(HttpServletRequest req) throws IOException, SQLException;
+    public abstract void deleteData(HttpServletRequest req) throws IOException, SQLException;
+    public abstract void generateData(int count) throws SQLException;
 
     public static TodosDatabase getDatabase()  {
         // File file = new File(Config.getFileName());
@@ -29,7 +30,7 @@ public abstract class Database {
         // IDbProvider<IData> provider = new FileDbProvider<>(file);
 
         try {
-            IDbProvider<IData> provider = new PostgresqlDbProvider<>();
+            IDbProvider<IData> provider = new PostgresqlDbProvider<>(new ToDoTask());
             return new TodosDatabase(provider);
         }
         catch (SQLException | DataFormatException e) {

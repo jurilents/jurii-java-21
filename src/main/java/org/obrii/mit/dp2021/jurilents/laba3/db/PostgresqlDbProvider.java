@@ -2,12 +2,9 @@ package org.obrii.mit.dp2021.jurilents.laba3.db;
 
 import org.obrii.mit.dp2021.jurilents.Config;
 import org.obrii.mit.dp2021.jurilents.laba3.data.IData;
-import org.obrii.mit.dp2021.jurilents.laba3.db.annotations.DbField;
-import org.obrii.mit.dp2021.jurilents.laba3.db.annotations.DbTable;
+import org.obrii.mit.dp2021.jurilents.laba3.db.annotations.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +19,10 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
     private Statement statement;
     private String tablename;
     private String valueNames;
+    private final TData instance;
 
-    public PostgresqlDbProvider() throws DataFormatException, SQLException {
+    public PostgresqlDbProvider(TData instance) throws DataFormatException, SQLException {
+        this.instance = instance;
         this.logger = Logger.getLogger(FileDbProvider.class.getName());
         this.connect();
 
@@ -34,6 +33,7 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
 
     @Override
     public void create(TData addingData) {
+        System.out.println(addingData);
         String query = String.format("INSERT INTO %s (%s) VALUES (%s);",
                 tablename, valueNames, addingData.getValues());
         this.sql(query);
@@ -47,7 +47,7 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
             List<TData> result = new ArrayList<>();
 
             while (rs.next()) {
-                result.add((TData) TData.parse(rs));
+                result.add((TData) this.instance.parse(rs));
             }
 
             return result;
@@ -60,7 +60,7 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
 
     @Override
     public void update(int oldId, TData updatingData) {
-        String query = String.format("UPDATE %s set (%s) where id=%d;",
+        String query = String.format("UPDATE %s SET (%s) WHERE id=%d;",
                 tablename, updatingData.getKeysAndValues(), oldId);
         this.sql(query);
     }
@@ -73,6 +73,7 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
 
 
     public void closeConnection() throws SQLException {
+        this.statement.close();
         this.connection.close();
     }
 
@@ -82,7 +83,10 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
             this.connection.commit();
         } catch (Exception e) {
             System.out.println("SQL EXCEPTION!");
-            this.logger.log(Level.WARNING, e.toString());
+            System.out.println("QUERY: " + query);
+            System.out.println("------------------");
+            e.printStackTrace();
+            System.out.println("------------------");
         }
     }
 
@@ -92,8 +96,10 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
             Class.forName("org.postgresql.Driver");
             String url = String.format("%s://%s/%s", Config.getDbProvider(), Config.getDbHost(), Config.getDbName());
             this.connection = DriverManager.getConnection(url, Config.getDbUser(), Config.getDbPass());
+            this.connection.setAutoCommit(false);
             this.statement = this.connection.createStatement();
         } catch (Exception e) {
+            System.out.println("Connection exception!");
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(1);
@@ -101,35 +107,31 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
     }
 
     private void createTable() throws DataFormatException, SQLException {
-        Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        Class<TData> dataType = (Class<TData>) type;
+        Class<TData> dataType = (Class<TData>) this.instance.getClass();
 
-        if (dataType.isAnnotationPresent(DbTable.class)) {
-            DbTable table = dataType.getAnnotation(DbTable.class);
-            this.tablename = table.name();
+        DbTable table = dataType.getAnnotation(DbTable.class);
+        this.tablename = table.name();
 
-            List<String> names = new ArrayList<>();
-            List<String> fieldQueries = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        List<String> fieldQueries = new ArrayList<>();
 
-            for (Field fieldType : dataType.getDeclaredFields()) {
-                if (fieldType.isAnnotationPresent(DbField.class)) {
-                    DbField field = fieldType.getAnnotation(DbField.class);
-                    fieldQueries.add(String.format("%s %s", field.name(), field.opts()));
-                    names.add(field.name());
-                }
+        for (Field fieldType : dataType.getDeclaredFields()) {
+            if (fieldType.isAnnotationPresent(DbField.class)) {
+                DbField field = fieldType.getAnnotation(DbField.class);
+                fieldQueries.add(String.format("%s %s", field.name(), field.opts()));
+                names.add(field.name());
             }
-
-            if (fieldQueries.size() == 0) {
-                this.logger.log(Level.WARNING, "The specified fields were not found in the registered table  " + tablename);
-                throw new DataFormatException();
-            }
-
-            this.valueNames = String.join(", ", names);
-
-            this.statement.execute(buildTableCreateQueryString(fieldQueries));
-            this.connection.commit();
-            this.statement.close();
         }
+
+        if (fieldQueries.size() == 0) {
+            this.logger.log(Level.WARNING, "The specified fields were not found in the registered table  " + tablename);
+            throw new DataFormatException();
+        }
+
+        this.valueNames = String.join(", ", names);
+
+        this.statement.execute(buildTableCreateQueryString(fieldQueries));
+        this.connection.commit();
     }
 
     private String buildTableCreateQueryString(List<String> fieldQueries) {
@@ -140,16 +142,14 @@ public class PostgresqlDbProvider<TData extends IData> implements IDbProvider<TD
                 "  LANGUAGE plpgsql AS\n" +
                 "$func$\n" +
                 "BEGIN\n" +
-                "   IF EXISTS (SELECT FROM pg_catalog.pg_tables \n" +
-                "              AND    tablename  = '%s') THEN\n" +
+                "   IF EXISTS (SELECT FROM pg_catalog.pg_tables WHERE tablename='%s') THEN\n" +
                 "      RAISE NOTICE 'Table %s already exists.';\n" +
                 "   ELSE\n" +
                 "      CREATE TABLE %s (%s);\n" +
                 "   END IF;\n" +
                 "END\n" +
-                "$func$;", tablename, tablename, tablename, fields);
-
-        System.out.println(sql);
+                "$func$;" +
+                "SELECT create_table();", tablename, tablename, tablename, fields);
 
         return sql;
     }

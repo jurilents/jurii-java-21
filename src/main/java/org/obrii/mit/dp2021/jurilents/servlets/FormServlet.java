@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.*;
 
 @WebServlet(name = "FormServlet", urlPatterns = {"/form"})
@@ -22,7 +23,7 @@ public class FormServlet extends HttpServlet {
     // | CRUD - Create-Read-Update-Delete |
     // ====================================
 
-    private void sendForm(HttpServletRequest request, HttpServletResponse response, Database dbProvider) throws ServletException, IOException {
+    private void sendForm(HttpServletRequest request, HttpServletResponse response, Database dbProvider) throws ServletException, IOException, SQLException {
         String addCountString = request.getParameter("add");
         if (addCountString != null) {
             int count = Integer.parseInt(addCountString);
@@ -78,15 +79,19 @@ public class FormServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("form/POST");
 
-        if (request.getParameter("opt") != null) {
-            request.getRequestDispatcher("pages/todoAdd.jsp").forward(request, response);
-        } else if (request.getParameter("add") != null) {
-            TodosDatabase db = Database.getDatabase();
-            sendForm(request, response, db);
-        } else {
-            TodosDatabase db = Database.getDatabase();
-            db.createData(request);
-            sendForm(request, response, db);
+        try {
+            if (request.getParameter("opt") != null) {
+                request.getRequestDispatcher("pages/todoAdd.jsp").forward(request, response);
+            } else if (request.getParameter("add") != null) {
+                TodosDatabase db = Database.getDatabase();
+                sendForm(request, response, db);
+            } else {
+                TodosDatabase db = Database.getDatabase();
+                db.createData(request);
+                sendForm(request, response, db);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -96,16 +101,20 @@ public class FormServlet extends HttpServlet {
         String option = request.getParameter("opt");
         System.out.println("form/GET" + (option == null ? "" : " " + option));
 
-        if (Config.getFileName() == null || Config.getFileName().equals("")) {
-            Config.setFileName(this.getServletContext().getRealPath(""));
-            System.out.println("DATA PATH: " + Config.getFileName());
-        }
+//        if (Config.getFileName() == null || Config.getFileName().equals("")) {
+//            Config.setFileName(this.getServletContext().getRealPath(""));
+//            System.out.println("DATA PATH: " + Config.getFileName());
+//        }
 
-        if (option != null && option.equals("create")) {
-            request.getRequestDispatcher("pages/todoAdd.jsp").forward(request, response);
-        } else {
-            TodosDatabase db = Database.getDatabase();
-            sendForm(request, response, db);
+        try {
+            if (option != null && option.equals("create")) {
+                request.getRequestDispatcher("pages/todoAdd.jsp").forward(request, response);
+            } else {
+                TodosDatabase db = Database.getDatabase();
+                sendForm(request, response, db);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -114,24 +123,32 @@ public class FormServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("form/PUT");
 
-        TodosDatabase db = Database.getDatabase();
-        db.updateData(request);
+        try {
+            TodosDatabase db = Database.getDatabase();
+            db.updateData(request);
 
-        Map<String, String> json = new HashMap<>();
-        json.put("status", "200");
-        sendJSON(request, response, json);
+            Map<String, String> json = new HashMap<>();
+            json.put("status", "200");
+            sendJSON(request, response, json);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // Delete data
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("form/DELETE");
-        TodosDatabase db = Database.getDatabase();
-        db.deleteData(request);
+        try {
+            TodosDatabase db = Database.getDatabase();
+            db.deleteData(request);
 
-        Map<String, String> json = new HashMap<>();
-        json.put("status", "200");
-        sendJSON(request, response, json);
+            Map<String, String> json = new HashMap<>();
+            json.put("status", "200");
+            sendJSON(request, response, json);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
