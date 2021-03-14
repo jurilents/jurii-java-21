@@ -19,10 +19,10 @@ public class Config {
     // PostgreSQL
 
     private static final String dbProvider   = "jdbc:postgresql";
-    private static final String dbHostName   = "localhost:5432";
-    private static final String databaseName = "java_lab4";
-    private static final String dbUserName   = "postgres";
-    private static final String dbPassword   = "postgres";
+    private static final String dbHostName   = "obrii.org:5432";
+    private static final String databaseName = "db2021mit21s4";
+    private static final String dbUserName   = "s4";
+    private static final String dbPassword   = "6406";
 
     public static String getDbPath() { return dbPath; }
     public static String getDbProvider() { return dbProvider; }
