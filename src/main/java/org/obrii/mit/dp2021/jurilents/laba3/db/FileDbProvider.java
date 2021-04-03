@@ -63,16 +63,16 @@ public class FileDbProvider<TData extends IData> implements IDbProvider<TData> {
 
         } catch (IOException | ClassNotFoundException ex) {
             logger.log(Level.SEVERE, null, ex);
-            return null;
+            return new ArrayList<>();
         }
     }
 
     @Override
-    public void update(TData newData) {
+    public void update(int oldId, TData newData) {
         List<TData> data = this.read();
         data.stream() // remove if it already exist
-                .filter(d -> d.getId() == newData.getId())
-                .findFirst().ifPresent(data::remove);
+                .filter(d -> d.getId() == oldId)
+                .findFirst().ifPresent(o -> data.remove(o));
 
         logger.log(Level.INFO, "Data updated");
         data.add(newData); // add new instance
@@ -81,10 +81,13 @@ public class FileDbProvider<TData extends IData> implements IDbProvider<TData> {
 
     @Override
     public void delete(int id) {
+        System.out.println("ID: " + id);
         List<TData> data = this.read();
+        System.out.println("data : " + data.size());
         data.stream() // remove if it already exist
                 .filter(d -> d.getId() == id)
-                .findFirst().ifPresent(data::remove);
+                .findFirst().ifPresent(o -> data.remove(o));
+        System.out.println("okk");
 
         logger.log(Level.INFO, "Data deleted");
         this.write(data);
