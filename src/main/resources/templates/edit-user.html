@@ -1,0 +1,21 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>JuriLents</title>
+    </head>
+    <body>
+        <form action="<%=request.getContextPath()%>/edit" method="post">
+            <input type="hidden" name="id" value="<%=request.getParameter("id")%>">
+
+                <h2>Edit User</h2>w
+                <input type="text" name="name" value="<%=request.getParameter("name")%>" required><br/>
+
+                    <input type="text" name="email" value="<%=request.getParameter("email")%>" required><br/>
+
+                        <input type="text" name="password" value="<%=request.getParameter("password")%>"><br/>
+
+                            <button class="button" type="submit">Update</button>
+                            </form>
+                            <a class="return" href="<%=request.getContextPath()%>">Save and return</a>
+                            </body>
+                            </html>    

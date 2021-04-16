@@ -1,0 +1,24 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <title>JuriLents</title>
+    </head>
+    <body>
+        <form action="#" th:action="@{/add}" th:object="${user}" method="post">
+            <h2>Add User</h2>
+            <label for="name">Name</label>
+            <input type="text" th:field="*{name}" id="name" placeholder="Name">
+                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+                <label for="email">Email</label>
+                <input type="text" th:field="*{age}" id="email" placeholder="Email" required="required">
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+                    <label for="password">Email</label>
+                    <input type="text" th:field="*{Password}" id="password" placeholder="Password">
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                        <input type="submit" value="Add User">   
+                            </form>
+                            </body>
+                            </html>
